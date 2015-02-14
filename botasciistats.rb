@@ -17,7 +17,10 @@ class BotAsciiStats
   
   def run
     twitter.on_mention do |tweet|
-      respond_to(tweet)
+      puts "Incoming mention: #{tweet.text}"
+      response = response_for(tweet.text)
+      puts "Responding with: #{response}"
+      respond_to(tweet, response)
     end
   end
   
@@ -27,8 +30,7 @@ class BotAsciiStats
     end
   end
   
-  def respond_to(tweet)
-    response = response_for(tweet.text)
+  def respond_to(tweet, response)
     twitter.tweet("@#{tweet.user.screen_name} #{response}", in_reply_to_status: tweet)
   end
   
