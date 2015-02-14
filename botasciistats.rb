@@ -17,8 +17,9 @@ class BotAsciiStats
   
   def run
     twitter.on_mention do |tweet|
-      puts "Incoming mention: #{tweet.text}"
-      response = response_for(tweet.text)
+      text = CGI.unescapeHTML(tweet.text)
+      puts "Incoming mention: #{text}"
+      response = response_for(text)
       puts "Responding with: #{response}"
       respond_to(tweet, response)
     end
@@ -52,7 +53,7 @@ class BotAsciiStats
       "@#{TARGET} has now made #{stats.num_tweets} tweets."
 
     when /what was (@#{TARGET}'s (last|latest) tweet|the last tweet of @#{TARGET})\?/i
-      "@#{TARGET}'s last tweet was: #{stats.last_tweet_text}"
+      "@#{TARGET}'s last tweet was: #{CGI.unescapeHTML(stats.last_tweet_text)}"
 
     when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
       text = $1
