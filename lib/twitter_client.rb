@@ -25,7 +25,12 @@ class TwitterClient
     streaming_client.user do |object|
       case object
       when Twitter::Tweet
-        yield(object) if object.user_mentions.map(&:id).include?(my_id) && object.user.id != my_id
+        if object.user_mentions.map(&:id).include?(my_id) && 
+           object.text.start_with?("@#{my_screen_name}") &&
+           object.user.id != my_id
+        then
+          yield(object)
+        end 
       end
     end
   end
@@ -70,5 +75,9 @@ class TwitterClient
 
   def my_id
     @my_id ||= with_retries{ rest_client.user.id }
+  end
+  
+  def my_screen_name
+    @my_screen_name ||= with_retries{ rest_client.user.screen_name }
   end
 end
