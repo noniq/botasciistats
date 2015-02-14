@@ -26,7 +26,7 @@ class TwitterClient
       case object
       when Twitter::Tweet
         if object.user_mentions.map(&:id).include?(my_id) && 
-           object.text.start_with?("@#{my_screen_name}") &&
+           object.text.match(/^(dear |hey )?@#{my_screen_name}/i) &&
            object.user.id != my_id
         then
           yield(object)
