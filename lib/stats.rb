@@ -20,7 +20,7 @@ class Stats
   end
   
   def last_tweet_text
-    twitter.get_latest_tweet_from(username).text
+    CGI.unescapeHTML(twitter.get_latest_tweet_from(username).text)
   end
   
   # Returns duration in seconds, or nil if `text` has already been tweeted
