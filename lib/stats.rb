@@ -27,7 +27,7 @@ class Stats
   def estimated_duration_until(text)
     current_sequence_nr = sequence_nr_for(last_tweet_text)
     expected_sequence_nr = sequence_nr_for(text)
-    if (nr_of_tweets = expected_sequence_nr - current_sequence_nr) < 0
+    if (nr_of_tweets = expected_sequence_nr - current_sequence_nr) <= 0
       return nil
     else
       nr_of_tweets * recent_tweet_interval
