@@ -46,13 +46,13 @@ class BotAsciiStats
          /what is @#{TARGET}'s (tweet frequency|frequency of (tweeting|tweets)|current speed)\?/i
       "@#{TARGET} is currently tweeting once every #{stats.recent_tweet_interval.round} seconds."
 
-    when /how (often|many tweets|many messages) has @#{TARGET} (already )?(done|tweeted)\?/i
+    when /how (often|many tweets|many messages) has @#{TARGET} (already )?(made|done|tweeted)\?/i
       "@#{TARGET} has now made #{stats.num_tweets} tweets."
 
     when /what was (@#{TARGET}'s (last|latest) tweet|the last tweet of @#{TARGET})\?/i
       "@#{TARGET}'s last tweet was: #{stats.last_tweet_text}"
 
-    when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?$/i
+    when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
       text = $1
       return "I'm afraid @#{TARGET} will probably never tweet #{text} …" unless text.match(ASCII_REGEXP)
       duration_seconds = stats.estimated_duration_until(text)
