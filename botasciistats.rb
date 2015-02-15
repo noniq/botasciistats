@@ -58,20 +58,24 @@ class BotAsciiStats
     when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
       text = $1
       return "I'm afraid @#{TARGET} will probably never tweet #{text} …" unless text.match(ASCII_REGEXP)
-      duration_seconds = stats.estimated_duration_until(text)
-      return "Oh, #{text} has already been tweeted by @#{TARGET}." unless duration_seconds
-      years = duration_seconds / (3600 * 24 * 365.24219)
-      description = if years < 10_000
-        timestamp = Time.now + duration_seconds
-        distance_in_words = Helper.distance_of_time_in_words(Time.now, timestamp)
-        "in #{distance_in_words} (at approx. #{timestamp.strftime('%H:%M on %b. %d, %Y')})"
+      if (timestamp = stats.estimated_timestamp_for(text))
+        "At its current speed, @#{TARGET} will tweet #{text} #{timestamp_description_for(timestamp)}."
       else
-        "in about #{Helper.number_with_delimiter(years.round)} years"
+        "Oh, #{text} has already been tweeted by @#{TARGET}."
       end
-      "At its current speed, @#{TARGET} will tweet #{text} #{description}."
 
     else
       "Sorry, I don't understand your request."
+    end
+  end
+  
+  def timestamp_description_for(timestamp)
+    years = (timestamp - Time.now) / (3600 * 24 * 365.24219)
+    if years < 10_000
+      distance_in_words = Helper.distance_of_time_in_words(Time.now, timestamp)
+      "in #{distance_in_words} (at approx. #{timestamp.strftime('%H:%M on %b. %d, %Y')})"
+    else
+      "in about #{Helper.number_with_delimiter(years.round)} years"
     end
   end
 end

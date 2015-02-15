@@ -23,14 +23,14 @@ class Stats
     twitter.get_latest_tweet_from(username).text
   end
   
-  # Returns duration in seconds, or nil if `text` has already been tweeted
-  def estimated_duration_until(text)
+  # Returns Time, or nil if `text` has already been tweeted
+  def estimated_timestamp_for(text)
     current_sequence_nr = sequence_nr_for(last_tweet_text)
     expected_sequence_nr = sequence_nr_for(text)
     if (nr_of_tweets = expected_sequence_nr - current_sequence_nr) <= 0
       return nil
     else
-      nr_of_tweets * recent_tweet_interval
+      Time.now + (nr_of_tweets * recent_tweet_interval)
     end
   end
   
