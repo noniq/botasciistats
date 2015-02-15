@@ -45,9 +45,21 @@ class Stats
   end
   
   def sequence_nr_for(string)
-    string.reverse.chars.
-      map{|c| c.ord - ascii_range.first + 1}.
+    total_nr_of_shorter_strings = 1.upto(string.length - 1).to_a.map{ |n| magic_formula(n) }.inject(0, :+)
+
+    position_within_strings_of_same_length = string.reverse.chars.
+      map{|c| c.ord - ascii_range.first}.
       map.with_index{|c, i| c * (ascii_range.size ** i)}.
       inject(:+)
+    
+    total_nr_of_shorter_strings + position_within_strings_of_same_length - 
+      (ascii_range.size ** (string.length - 1)).floor -
+      position_within_strings_of_same_length / ascii_range.size +
+      (ascii_range.size ** (string.length - 2)).ceil
+  end
+  
+  def magic_formula(length)
+    n = ascii_range.size
+    n ** length - 2 * (n ** (length - 1)).ceil + (n ** (length - 2)).ceil
   end
 end

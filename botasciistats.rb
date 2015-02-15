@@ -66,7 +66,7 @@ class BotAsciiStats
       "@#{TARGET}'s last tweet was: #{stats.last_tweet.text}"
 
     when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
-      text = $1
+      text = $1.strip
       return "I'm afraid @#{TARGET} will probably never tweet #{text} …" unless text.match(ASCII_REGEXP)
       if (timestamp = stats.estimated_timestamp_for(text)) == :not_tweeting
         "Hm, @#{TARGET} seems to have stopped tweeting, so I don't know when it will tweet #{text}."
