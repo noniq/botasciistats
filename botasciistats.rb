@@ -51,7 +51,11 @@ class BotAsciiStats
 
     when /(how (fast|often|frequently)|at which speed) (is|does) @#{TARGET} (currently )?tweet(ing)?\?/i, 
          /what is @#{TARGET}'s (tweet frequency|frequency of (tweeting|tweets)|current speed)\?/i
-      "@#{TARGET} is currently tweeting once every #{stats.recent_tweet_interval.round} seconds."
+      if (interval = stats.recent_tweet_interval) == :not_tweeting
+        "Ooops, @#{TARGET} seems to have stopped tweeting :-("
+      else
+        "@#{TARGET} is currently tweeting once every #{interval.round} seconds."
+      end
 
     when /how (often|many tweets|many messages) has @#{TARGET} (already )?(made|done|tweeted)\?/i
       "@#{TARGET} has now made #{stats.num_tweets} tweets."
@@ -62,10 +66,12 @@ class BotAsciiStats
     when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
       text = $1
       return "I'm afraid @#{TARGET} will probably never tweet #{text} …" unless text.match(ASCII_REGEXP)
-      if (timestamp = stats.estimated_timestamp_for(text))
-        "At its current speed, @#{TARGET} will tweet #{text} #{timestamp_description_for(timestamp)}."
-      else
+      if (timestamp = stats.estimated_timestamp_for(text)) == :not_tweeting
+        "Hm, @#{TARGET} seems to have stopped tweeting, so I don't know when it will tweet #{text}."
+      elsif timestamp == :already_tweeted
         "Oh, #{text} has already been tweeted by @#{TARGET}."
+      else
+        "At its current speed, @#{TARGET} will tweet #{text} #{timestamp_description_for(timestamp)}."
       end
 
     when /(what is|what's) the meaning of life?/i, /(what is|what's) the answer to the (ultimate )?question( of (life|everything))?\?/i
