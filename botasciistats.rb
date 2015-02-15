@@ -75,10 +75,12 @@ class BotAsciiStats
       end
 
     when /(what is|what's) the meaning of life?/i, /(what is|what's) the answer to the (ultimate )?question( of (life|everything))?\?/i
-      if (timestamp = stats.estimated_timestamp_for("42"))
-        "@#{TARGET} will tweet the answer to the ultimate question of life #{timestamp_description_for(timestamp)}."
-      else
+      if (timestamp = stats.estimated_timestamp_for("42")) == :already_tweeted
         "The answer to the ultimate question of life has already been tweeted by @#{TARGET}. Did you miss it?"
+      elsif timestamp == :not_tweeting
+        "Seems like @#{TARGET} has stopped tweeting … so we'll never know the answer to the ultimate question of life."
+      else
+        "@#{TARGET} will tweet the answer to the ultimate question of life #{timestamp_description_for(timestamp)}."
       end
 
     else
