@@ -25,13 +25,13 @@ class BotAsciiStats
     if last_handled_tweet_id
       logger.info "Checking for unhandled mentions since id #{last_handled_tweet_id}."
       twitter.get_direct_mentions_since(last_handled_tweet_id).each do |tweet|
-        logger.info "Found unhandled mention: #{tweet.text}"
+        logger.info "Unhandled mention from @#{tweet.screen_name}: #{tweet.text}"
         respond_to(tweet)
       end
     end
     logger.info "Now listening to the Twitter stream."
     twitter.on_direct_mention do |tweet|
-      logger.info "Incoming mention: #{tweet.text}"
+      logger.info "Mention from @#{tweet.screen_name}: #{tweet.text}"
       respond_to(tweet)
     end
   end
@@ -43,9 +43,9 @@ class BotAsciiStats
   end
   
   def respond_to(tweet)
-    response = response_for(tweet.text)
+    response = "@#{tweet.screen_name} " + response_for(tweet.text)
     logger.info "Responding with: #{response}"
-    twitter.tweet("@#{tweet.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+    twitter.tweet(response, in_reply_to_status_id: tweet.id)
     self.last_handled_tweet_id = tweet.id
   end
   
