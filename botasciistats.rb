@@ -1,3 +1,4 @@
+require 'logger'
 require 'readline'
 require_relative 'lib/helper'
 require_relative 'lib/twitter_client'
@@ -8,18 +9,22 @@ ASCII_RANGE = 32..126
 ASCII_REGEXP = Regexp.new("^[\\x#{ASCII_RANGE.first.to_s(16)}-\\x#{ASCII_RANGE.last.to_s(16)}]{1,16}$")
 
 class BotAsciiStats
-  attr_reader :twitter, :stats
+  attr_reader :logger, :twitter, :stats
   
   def initialize
-    @twitter = TwitterClient.new
+    @logger  = Logger.new(STDOUT)
+    @logger.formatter = ->(severity, datetime, progname, msg) {
+      "#{datetime.strftime('%Y-%m-%d %H:%M:%S')} - #{msg}\n"
+    }
+    @twitter = TwitterClient.new(@logger)
     @stats   = Stats.new(twitter, TARGET, ASCII_RANGE)
   end
   
   def run
     twitter.on_mention do |tweet|
-      puts "Incoming mention: #{tweet.text}"
+      logger.info "Incoming mention: #{tweet.text}"
       response = response_for(tweet.text)
-      puts "Responding with: #{response}"
+      logger.info "Responding with: #{response}"
       respond_to(tweet, response)
     end
   end

@@ -4,9 +4,10 @@ class TwitterClient
   MAX_RETRIES = 8
   RETRY_DELAY = 10
 
-  attr_reader :rest_client, :streaming_client
+  attr_reader :rest_client, :streaming_client, :logger
   
-  def initialize
+  def initialize(logger)
+    @logger = logger
     @rest_client = Twitter::REST::Client.new do |config|
       config.consumer_key        = ENV["TWITTER_CONSUMER_KEY"]
       config.consumer_secret     = ENV["TWITTER_CONSUMER_SECRET"]
@@ -64,11 +65,11 @@ class TwitterClient
         delay = err.rate_limit.reset_in || RETRY_DELAY * num_tries
         location = caller[1].gsub("#{__dir__}/", "")
         timestamp = Time.now.strftime('%Y-%m-%d %H:%M:%S')
-        puts "#{timestamp} ERROR: \"#{err}\", retry ##{num_tries} in #{delay} seconds (#{location})"
+        logger.warn "#{timestamp} ERROR: \"#{err}\", retry ##{num_tries} in #{delay} seconds (#{location})"
         sleep(delay)
         retry
       else
-        puts "Retried #{MAX_RETRIES} times, giving up."
+        logger.error "Retried #{MAX_RETRIES} times, giving up."
         raise
       end
     end
