@@ -19,13 +19,13 @@ class Stats
     twitter.get_tweet_count_for(username)
   end
   
-  def last_tweet_text
-    twitter.get_latest_tweet_from(username).text
+  def last_tweet
+    twitter.get_latest_tweet_from(username)
   end
   
   # Returns Time, or nil if `text` has already been tweeted
   def estimated_timestamp_for(text)
-    current_sequence_nr = sequence_nr_for(last_tweet_text)
+    current_sequence_nr = sequence_nr_for(last_tweet.text)
     expected_sequence_nr = sequence_nr_for(text)
     if (nr_of_tweets = expected_sequence_nr - current_sequence_nr) <= 0
       return nil

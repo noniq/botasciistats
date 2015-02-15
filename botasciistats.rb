@@ -53,7 +53,7 @@ class BotAsciiStats
       "@#{TARGET} has now made #{stats.num_tweets} tweets."
 
     when /what was (@#{TARGET}'s (last|latest) tweet|the last tweet of @#{TARGET})\?/i
-      "@#{TARGET}'s last tweet was: #{CGI.unescapeHTML(stats.last_tweet_text)}"
+      "@#{TARGET}'s last tweet was: #{CGI.unescapeHTML(stats.last_tweet.text)}"
 
     when /when will @#{TARGET} (?:reach|tweet|be tweeting) (.+)\?/i
       text = $1
