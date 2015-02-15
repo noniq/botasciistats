@@ -32,7 +32,7 @@ class BotAsciiStats
   end
   
   def respond_to(tweet, response)
-    twitter.tweet("@#{tweet.user.screen_name} #{response}", in_reply_to_status: tweet)
+    twitter.tweet("@#{tweet.screen_name} #{response}", in_reply_to_status_id: tweet.id)
   end
   
   def response_for(message)

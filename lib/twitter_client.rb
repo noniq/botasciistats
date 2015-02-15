@@ -29,14 +29,14 @@ class TwitterClient
            object.text.match(/^(dear |hey )?@#{my_screen_name}/i) &&
            object.user.id != my_id
         then
-          yield(object)
+          yield(Tweet.new(object))
         end 
       end
     end
   end
   
   def get_recent_tweets_from(username, count: 10)
-    with_retries{ rest_client.user_timeline(username, count: count) }
+    with_retries{ rest_client.user_timeline(username, count: count).map{|t| Tweet.new(t) } }
   end
   
   def get_latest_tweet_from(username)
@@ -80,5 +80,17 @@ class TwitterClient
   
   def my_screen_name
     @my_screen_name ||= with_retries{ rest_client.user.screen_name }
+  end
+  
+  
+  class Tweet
+    attr_reader :id, :text, :created_at, :screen_name
+    
+    def initialize(twitter_gem_tweet)
+      @id          = twitter_gem_tweet.id
+      @text        = twitter_gem_tweet.text
+      @created_at  = twitter_gem_tweet.created_at
+      @screen_name = twitter_gem_tweet.user.screen_name
+    end
   end
 end
