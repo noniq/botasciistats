@@ -33,7 +33,6 @@ class BotAsciiStats
     twitter.on_direct_mention do |tweet|
       logger.info "Incoming mention: #{tweet.text}"
       respond_to(tweet)
-      self.last_handled_tweet_id = tweet.id
     end
   end
   
@@ -47,6 +46,7 @@ class BotAsciiStats
     response = response_for(tweet.text)
     logger.info "Responding with: #{response}"
     twitter.tweet("@#{tweet.screen_name} #{response}", in_reply_to_status_id: tweet.id)
+    self.last_handled_tweet_id = tweet.id
   end
   
   def response_for(message)
