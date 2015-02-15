@@ -66,7 +66,7 @@ class BotAsciiStats
 
     when /(what is|what's) the meaning of life?/i, /(what is|what's) the answer to the (ultimate )?question( of (life|everything))?\?/i
       if (timestamp = stats.estimated_timestamp_for("42"))
-        "I'm expecting @#{TARGET} to tweet the answer to the ultimate question of life #{timestamp_description_for(timestamp)}."
+        "@#{TARGET} will tweet the answer to the ultimate question of life #{timestamp_description_for(timestamp)}."
       else
         "The answer to the ultimate question of life has already been tweeted by @#{TARGET}. Did you miss it?"
       end
