@@ -20,6 +20,9 @@ class TwitterClient
       config.access_token        = ENV["TWITTER_ACCESS_TOKEN"]
       config.access_token_secret = ENV["TWITTER_ACCESS_SECRET"]
     end
+    # This seems to reduce the number of times a TooManyRequests error happens when 
+    # connecting to the Twitter stream.
+    Twitter::REST::Request.new(@rest_client, :get, "https://api.twitter.com/1.1/application/rate_limit_status.json").perform
   end
 
   def on_direct_mention
