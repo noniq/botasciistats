@@ -44,7 +44,7 @@ class BotAsciiStats
         "I could tell you how many tweets @#{TARGET} has already made."
       ].sample
 
-    when /(how (fast|often|frequently)|at which speed) (is|does) @#{TARGET} tweet(ing)?\?/i, 
+    when /(how (fast|often|frequently)|at which speed) (is|does) @#{TARGET} (currently )?tweet(ing)?\?/i, 
          /what is @#{TARGET}'s (tweet frequency|frequency of (tweeting|tweets)|current speed)\?/i
       "@#{TARGET} is currently tweeting once every #{stats.recent_tweet_interval.round} seconds."
 
