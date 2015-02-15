@@ -25,12 +25,13 @@ class Stats
   
   # Returns Time, or nil if `text` has already been tweeted
   def estimated_timestamp_for(text)
-    current_sequence_nr = sequence_nr_for(last_tweet.text)
+    tweet = last_tweet
+    current_sequence_nr = sequence_nr_for(tweet.text)
     expected_sequence_nr = sequence_nr_for(text)
     if (nr_of_tweets = expected_sequence_nr - current_sequence_nr) <= 0
       return nil
     else
-      Time.now + (nr_of_tweets * recent_tweet_interval)
+      tweet.created_at + (nr_of_tweets * recent_tweet_interval)
     end
   end
   
