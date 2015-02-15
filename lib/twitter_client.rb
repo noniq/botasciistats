@@ -48,6 +48,7 @@ class TwitterClient
   end
   
   def tweet(message, options = {})
+    message = message[0, 140] # make sure we're not overflowing twitter …
     with_retries{ rest_client.update(message, options) }
   end
   
