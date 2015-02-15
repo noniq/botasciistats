@@ -88,7 +88,7 @@ class TwitterClient
     
     def initialize(twitter_gem_tweet)
       @id          = twitter_gem_tweet.id
-      @text        = twitter_gem_tweet.text
+      @text        = CGI.unescapeHTML(twitter_gem_tweet.text)
       @created_at  = twitter_gem_tweet.created_at
       @screen_name = twitter_gem_tweet.user.screen_name
     end
