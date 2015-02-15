@@ -22,7 +22,7 @@ class TwitterClient
     end
   end
 
-  def on_mention
+  def on_direct_mention
     streaming_client.user do |object|
       case object
       when Twitter::Tweet

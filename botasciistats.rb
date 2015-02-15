@@ -21,7 +21,7 @@ class BotAsciiStats
   end
   
   def run
-    twitter.on_mention do |tweet|
+    twitter.on_direct_mention do |tweet|
       logger.info "Incoming mention: #{tweet.text}"
       response = response_for(tweet.text)
       logger.info "Responding with: #{response}"
