@@ -46,7 +46,7 @@ class Stats
   
   def sequence_nr_for(string)
     string.reverse.chars.
-      map{|c| c.ord - ascii_range.first}.
+      map{|c| c.ord - ascii_range.first + 1}.
       map.with_index{|c, i| c * (ascii_range.size ** i)}.
       inject(:+)
   end
