@@ -7,7 +7,7 @@ require_relative 'lib/stats'
 TARGET = 'BotAscii'
 STATUS_FILE_NAME = "#{__dir__}/status.txt"
 ASCII_RANGE = 32..126
-ASCII_REGEXP = Regexp.new("^[\\x#{ASCII_RANGE.first.to_s(16)}-\\x#{ASCII_RANGE.last.to_s(16)}]{1,16}$")
+ASCII_REGEXP = Regexp.new("^[\\x#{ASCII_RANGE.first.to_s(16)}-\\x#{ASCII_RANGE.last.to_s(16)}]{1,20}$")
 
 class BotAsciiStats
   attr_reader :logger, :twitter, :stats
