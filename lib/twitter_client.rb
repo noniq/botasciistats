@@ -26,14 +26,14 @@ class TwitterClient
     streaming_client.user do |object|
       case object
       when Twitter::Tweet
-        if object.user_mentions.map(&:id).include?(my_id) && 
-           object.text.match(/^(dear |hey )?@#{my_screen_name}/i) &&
-           object.user.id != my_id
-        then
-          yield(Tweet.new(object))
-        end 
+        yield(Tweet.new(object)) if direct_mention?(object)
       end
     end
+  end
+
+  def get_direct_mentions_since(last_handled_tweet_id)
+    mentions = rest_client.mentions_timeline(since_id: last_handled_tweet_id, count: 200)
+    mentions.select{ |t| direct_mention?(t) }.map{ |t| Tweet.new(t) }
   end
   
   def get_recent_tweets_from(username, count: 10)
@@ -75,6 +75,12 @@ class TwitterClient
     end
   end
 
+  def direct_mention?(tweet)
+    tweet.user_mentions.map(&:id).include?(my_id) && 
+      tweet.text.match(/^(dear |hey )?@#{my_screen_name}/i) &&
+      tweet.user.id != my_id
+  end
+  
   def my_id
     @my_id ||= with_retries{ rest_client.user.id }
   end

@@ -5,6 +5,7 @@ require_relative 'lib/twitter_client'
 require_relative 'lib/stats'
 
 TARGET = 'BotAscii'
+STATUS_FILE_NAME = "#{__dir__}/status.txt"
 ASCII_RANGE = 32..126
 ASCII_REGEXP = Regexp.new("^[\\x#{ASCII_RANGE.first.to_s(16)}-\\x#{ASCII_RANGE.last.to_s(16)}]{1,16}$")
 
@@ -21,11 +22,18 @@ class BotAsciiStats
   end
   
   def run
+    if last_handled_tweet_id
+      logger.info "Checking for unhandled mentions since id #{last_handled_tweet_id}."
+      twitter.get_direct_mentions_since(last_handled_tweet_id).each do |tweet|
+        logger.info "Found unhandled mention: #{tweet.text}"
+        respond_to(tweet)
+      end
+    end
+    logger.info "Now listening to the Twitter stream."
     twitter.on_direct_mention do |tweet|
       logger.info "Incoming mention: #{tweet.text}"
-      response = response_for(tweet.text)
-      logger.info "Responding with: #{response}"
-      respond_to(tweet, response)
+      respond_to(tweet)
+      self.last_handled_tweet_id = tweet.id
     end
   end
   
@@ -35,7 +43,9 @@ class BotAsciiStats
     end
   end
   
-  def respond_to(tweet, response)
+  def respond_to(tweet)
+    response = response_for(tweet.text)
+    logger.info "Responding with: #{response}"
     twitter.tweet("@#{tweet.screen_name} #{response}", in_reply_to_status_id: tweet.id)
   end
   
@@ -96,6 +106,18 @@ class BotAsciiStats
     else
       "in about #{Helper.number_with_delimiter(years.round)} years"
     end
+  end
+  
+  def last_handled_tweet_id
+    begin
+      File.read(STATUS_FILE_NAME).chomp
+    rescue Errno::ENOENT
+      nil
+    end
+  end
+  
+  def last_handled_tweet_id=(id)
+    File.write(STATUS_FILE_NAME, id)
   end
 end
 
