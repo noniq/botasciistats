@@ -51,14 +51,6 @@ class BotAsciiStats
   
   def response_for(message)
     case message
-    when /\bhelp\b/i
-      [
-        "Try asking me when @#{TARGET} will be tweeting a specific string.",
-        "For a start, you could ask me how fast @#{TARGET} is tweeting.",
-        "Maybe you'd like to ask me what @#{TARGET}'s last tweet was?",
-        "I could tell you how many tweets @#{TARGET} has already made."
-      ].sample
-
     when /(how (fast|often|frequently)|at which speed) (is|does) @#{TARGET} (currently )?tweet(ing)?\?/i, 
          /what is @#{TARGET}'s (tweet frequency|frequency of (tweeting|tweets)|current speed)\?/i
       if (interval = stats.recent_tweet_interval) == :not_tweeting
@@ -92,6 +84,14 @@ class BotAsciiStats
       else
         "@#{TARGET} will tweet the answer to the ultimate question of life #{timestamp_description_for(timestamp)}."
       end
+
+    when /\bhelp\b/i
+      [
+        "Try asking me when @#{TARGET} will be tweeting a specific string.",
+        "For a start, you could ask me how fast @#{TARGET} is tweeting.",
+        "Maybe you'd like to ask me what @#{TARGET}'s last tweet was?",
+        "I could tell you how many tweets @#{TARGET} has already made."
+      ].sample
 
     else
       "Sorry, I don't understand your request."
