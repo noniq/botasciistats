@@ -6,6 +6,7 @@ require_relative 'lib/stats'
 
 TARGET = 'BotAscii'
 STATUS_FILE_NAME = "#{__dir__}/status.txt"
+LOG_FILE_NAME = "#{__dir__}/log/botasciistats.log"
 ASCII_RANGE = 32..126
 ASCII_REGEXP = Regexp.new("^[\\x#{ASCII_RANGE.first.to_s(16)}-\\x#{ASCII_RANGE.last.to_s(16)}]{1,20}$")
 
@@ -13,7 +14,7 @@ class BotAsciiStats
   attr_reader :logger, :twitter, :stats
   
   def initialize
-    @logger  = Logger.new(STDOUT)
+    @logger  = Logger.new($stdout.tty? ? STDOUT : LOG_FILE_NAME, 10, 1024000)
     @logger.formatter = ->(severity, datetime, progname, msg) {
       "#{datetime.strftime('%Y-%m-%d %H:%M:%S')} - #{msg}\n"
     }
