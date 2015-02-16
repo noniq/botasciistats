@@ -4,4 +4,4 @@ basedir=`dirname $0`/..
 
 cd $basedir
 [ -e auth.env ] && . auth.env
-bundle exec ruby botasciistats.rb "$@"
+exec bundle exec ruby botasciistats.rb "$@"
