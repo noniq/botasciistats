@@ -124,6 +124,7 @@ end
 
 if __FILE__ == $0
   instance = BotAsciiStats.new
+  at_exit{ instance.logger.warn "Exiting." }
   if ARGV.first == "console"
     instance.run_console
   else
