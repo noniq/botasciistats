@@ -2,5 +2,6 @@
 
 basedir=`dirname $0`/..
 
-[ -e $basedir/auth.env ] && . $basedir/auth.env
-bundle exec ruby $basedir/botasciistats.rb "$@"
+cd $basedir
+[ -e auth.env ] && . auth.env
+bundle exec ruby botasciistats.rb "$@"
